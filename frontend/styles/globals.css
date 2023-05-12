@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+
+body {
+  background-color: rgb(236, 229, 211);
+}
+
+.title {
+  font-family: 'Chivo Mono', monospace;
+  font-size: 1.5em;
+  font-weight: 700;
+  color: rgb(0, 0, 0);
+  text-align: center;
+}
+
+.MuiToolbar-root	{
+  padding: 1px;
+  background-color: rgb(212, 193, 125);
+}
+
+.search-bar {
+  padding-top: 5px;
+}
+
+.login_icon {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  text-transform: none;
+  color: rgb(7, 84, 90);
+}
+
+.login-s {
+  padding: 10px;
+}
+.icon-center {
+  text-align: right;
+}
+
+.menu {
+  margin-top: 10px;
+}
+
+.MuiMenu-root	{
+color: white;
+}
+
+.main_body {
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  margin-left: 12%;
+  margin-right: 12%;
+  margin-top: 5px;
+  border-radius: 5px;
+}
