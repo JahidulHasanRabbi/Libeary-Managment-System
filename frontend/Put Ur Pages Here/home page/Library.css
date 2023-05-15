@@ -1,0 +1,199 @@
+
+body{
+
+	background-image: url("BOOKS-HD-WALLPAPER.jpg");
+	background-attachment: fixed;
+	background-size: cover;
+ 
+
+}
+
+
+
+.upper{
+	height: auto;
+	width: 2000px auto;
+	display: block;
+	display: flex;
+ 
+
+
+}
+.upperleft{
+    margin-left: 15px;
+   width: 100px;
+  
+}
+.upperright{
+	 width: 1000px;
+}
+
+
+.header{
+  
+	color: yellow;
+   font-family: sofia;
+   font-size: 30px;
+   font-weight: bold;
+   text-shadow: 4px 5px black;
+}
+
+
+
+.box{
+
+width: 700px;
+position: absolute;
+
+margin-left: 600px;
+
+
+
+}
+
+.box ul li {
+width: 125px;
+display: inline-block;
+margin: 5px auto;
+text-align: center;
+font-weight: bold;
+font-size: 16px;
+}
+
+.box ul li a {
+
+text-decoration: none;
+color:white;
+}
+
+.box ul li:hover {
+background-color: pink;
+}
+.box ul li a:hover { color: red;
+}
+
+.writting{
+	color:GhostWhite;
+	font-family: cursive;
+	font-size: 25px;
+	font-weight: bold;
+	text-shadow: 2px 3px black;
+}
+ .data{
+
+margin-left: 15px;
+
+ }
+
+.readonline{
+   
+   font-size: 23px;
+   color: lightblue;
+   font-family: cursive;
+   text-decoration: none;
+
+
+}
+
+
+
+
+.full{
+  height: auto;
+	width: 2000px auto;
+	display: block;
+	display: flex;
+ 
+}
+.fulleft{
+ width: 1000px;
+
+}
+
+.fullright{
+
+width: 1000px;
+}
+
+ul li{
+	color: MistyRose;
+	margin-right: 470px;
+}
+ul li:hover{
+	background-color: black;
+	padding: 5px;
+
+}
+.mim{
+	margin-left: 20px;
+}
+.search{
+	width: 400px;
+	margin-top: 50px;
+	border: 1px solid;
+	border-color:pink; 
+
+
+}
+
+.secondlist{
+	font-family: "Sofia", sans-serif;
+	font-weight: bold;
+	font-size: 23px;
+ 
+}
+
+.down{
+  
+  width: 1500px auto;
+ display: flex;
+ margin-left: 250px;
+background-image: url(down.jpg);
+margin-right: 160px;
+margin-top: 20px;
+
+}
+.downdata{
+
+	font-size: 18px;
+	
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.downleft{
+
+ width: 1000px;
+}
+
+.downright{
+width: 500px;
+ background-color: white;
+
+}
+.logo{
+	margin-left: 5px;
+}
+
+
+#overlay-area{
+position: absolute;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: -5;
+height: 375%;
+width: 120%;
+top: 0;
+bottom: 0;
+
+}
+
+.card-title{
+
+ color: lightcoral;
+
+
+}
+.card-title:hover{
+
+	 color: blueviolet ;
+}
