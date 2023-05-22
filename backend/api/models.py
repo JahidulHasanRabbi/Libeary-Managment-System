@@ -58,4 +58,12 @@ class Subject(models.model):
 
 #Book Reserve
 class BookReserve(models.Model):
-    pass
+    id = models.UUIDField(default=uuid.uuid4,
+                        primary_key=True,
+                        unique=True,
+                        editable=False)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+    return_date = models.DateTimeField(default=timezone.now)
+    status = models.BooleanField(default=False)
