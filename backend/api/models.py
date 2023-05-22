@@ -67,3 +67,14 @@ class BookReserve(models.Model):
     date = models.DateTimeField(default=timezone.now)
     return_date = models.DateTimeField(default=timezone.now)
     status = models.BooleanField(default=False)
+
+class Fine(models.Model):
+    id = models.UUIDField(default=uuid.uuid4,
+                        primary_key=True,
+                        unique=True,
+                        editable=False)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+    amount = models.IntegerField()
+    status = models.BooleanField(default=False)
