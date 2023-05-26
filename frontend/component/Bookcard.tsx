@@ -8,21 +8,16 @@ import Typography from '@mui/material/Typography';
 
 const Bookcard = ({ book }: any) =>{
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card>
       <CardMedia
-        sx={{ height: 140 }}
+        sx={{ width: 125, height: 200}}
         image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-        title="green iguana"
       />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {book.title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {book.body}
-        </Typography>
-      </CardContent>
-     
+
+      <CardActions>
+        <Button size="small">Borrow</Button>
+      </CardActions>
+
     </Card>
   );
 }
