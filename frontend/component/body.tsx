@@ -1,19 +1,30 @@
+import { useEffect, useState } from "react";
+import Bookcard from "./Bookcard";
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+
+
 
 const Body = () => {
+
+    
+    const [todo, setTodo] = useState(null);
+
+    useEffect(() => {
+      fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(response => response.json())
+        .then(data => setTodo(data))
+        .catch(error => console.log(error));
+    }, []);
+
+
     return (
-        <div className="main_body">
-            <section className="carsoul-1">
-                <div className="carsoul-1-content">
-                    <h1>Hasan Library</h1>
-                </div>
-            </section>
-            <section className="carsoul-2">
-                <div className="carsoul-2-content">
-                    <h1>Hasan Library</h1>
-                </div>
-            </section>
+        <div>
+            {todo && todo.map((book: any) => (
+                <Bookcard book={book} />
+            ))
+            }
         </div>
-    );
-};
+    )
+}
 
 export default Body
