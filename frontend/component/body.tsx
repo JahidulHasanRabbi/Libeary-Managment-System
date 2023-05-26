@@ -7,6 +7,11 @@ const Body = () => {
                     <h1>Hasan Library</h1>
                 </div>
             </section>
+            <section className="carsoul-2">
+                <div className="carsoul-2-content">
+                    <h1>Hasan Library</h1>
+                </div>
+            </section>
         </div>
     );
 };
