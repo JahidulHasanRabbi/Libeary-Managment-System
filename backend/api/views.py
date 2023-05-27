@@ -23,7 +23,7 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-class AddBookAPIView(APIView):
+class AddBookAPIView(ListCreateAPIView):
     def post(self, request):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,14 +31,14 @@ class AddBookAPIView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-class DeleteBookAPIView(APIView):
+class DeleteBookAPIView(ListCreateAPIView):
     def post(self, request, book_id):
         book = Book.objects.get(id=book_id)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
-class UpdateBookAPIView(APIView):
+class UpdateBookAPIView(ListCreateAPIView):
     def put(self, request, book_id):
         book = Book.objects.get(id=book_id)
         serializer = BookSerializer(book, data=request.data)
@@ -46,12 +46,6 @@ class UpdateBookAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
-
-class BookListAPIView(ListAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'author', 'description', 'category']
 
 
 class UserRegisterView(ListCreateAPIView):
