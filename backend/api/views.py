@@ -23,19 +23,36 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-
-class ProdcutAddView(ListCreateAPIView):
-    permission_classes = [IsAuthenticated,  ]
-    parser_classes = [MultiPartParser, FormParser,]
+class AddBookAPIView(APIView):
     def post(self, request):
-        print(request.data)
-        serializer = ProductSerializer(data=request.data)
+        serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
-            proudct = serializer.save()
-            print(serializer.data)
-            return Response({"Meg":{"New Product Added":serializer.data}},status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors ,status=status.HTTP_417_EXPECTATION_FAILED)
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+class DeleteBookAPIView(APIView):
+    def post(self, request, book_id):
+        book = Book.objects.get(id=book_id)
+        book.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+
+class UpdateBookAPIView(APIView):
+    def put(self, request, book_id):
+        book = Book.objects.get(id=book_id)
+        serializer = BookSerializer(book, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+class BookListAPIView(ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'author', 'description', 'category']
+
 
 class UserRegisterView(ListCreateAPIView):
     permission_classes = (AllowAny, )
@@ -114,31 +131,14 @@ class UserProfileView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-"""class ProductDetailsView(views.APIView):
-    serializer_class = ProductSerializer
-    permission_classes = [AllowAny,]
 
-    def post(self, request):
-        id = request.data.get('id')
-        print(request.data)
-        queryset = Product.objects.get(id=id)
-        serializer = ProductViewSerializer(queryset,context={'request': request},)
-        print(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-"""
 class home(views.APIView):
     permission_classes = (AllowAny,)
     def post(self, request):
         return Response("OK", status=status.HTTP_200_OK)
     
-        
-"""class SerachView(ListAPIView):
-    permission_classes = (AllowAny,)
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ['product_name', 'brand']
-"""
+
+
 
 class chatbot(views.APIView):
     permission_classes = (AllowAny,)

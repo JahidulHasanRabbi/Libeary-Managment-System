@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 import uuid
 from .managers import CustomUserManager
+print(timezone.now)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -35,7 +36,6 @@ class Authour(models.Model):
     def __str__(self):
         return self.name
 
-#Product Path
 class Book(models.Model):
     id = models.UUIDField(default=uuid.uuid4,
                         primary_key=True,
@@ -51,10 +51,6 @@ class Book(models.Model):
     qty = models.IntegerField()
     revision = models.CharField(max_length=50)
 
-
-class Subject(models.model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    subject = models.CharField(max_length=250)
 
 #Book Reserve
 class BookReserve(models.Model):
