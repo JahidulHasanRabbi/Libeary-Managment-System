@@ -18,16 +18,18 @@ const Body = () => {
 
 
     return (
-        <div >
-            <Grid container spacing={2}>
-                    {todo && todo.map((book: any) => (
-                    <Grid item xs={8}>
-                        <Bookcard book={book} />
-                    </Grid>
-                        ))
-                    }
-                    
-            </Grid>
+        <div className='main_body'>
+            <section className="card_section">
+                <Grid  container spacing={2}>
+                        {todo && todo.slice(0, 6).map((book: any) => (
+                        <Grid item  md={2} key={book.id} >
+                            <Bookcard book={book} />
+                        </Grid>
+                            ))
+                        }
+                        
+                </Grid>
+            </section>
         </div>
     )
 }

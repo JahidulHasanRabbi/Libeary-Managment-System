@@ -8,14 +8,15 @@ import Typography from '@mui/material/Typography';
 
 const Bookcard = ({ book }: any) =>{
   return (
-    <Card>
+    <Card className='card-container'>
       <CardMedia
-        sx={{ width: 125, height: 200}}
+      sx={{ width: 125, height: 200 }}
+        component="img"
         image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
       />
 
-      <CardActions>
-        <Button size="small">Borrow</Button>
+      <CardActions className='card-action'>
+        <Button variant="contained" >Borrow</Button>
       </CardActions>
 
     </Card>
