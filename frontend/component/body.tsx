@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Bookcard from "./Bookcard";
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
+import Link from "next/link";
 
 
 
@@ -29,6 +30,31 @@ const Body = () => {
                         }
                         
                 </Grid>
+            </section>.
+            <section className="card_section2">
+                <Typography variant="h5" component="h4" gutterBottom>
+                      <span>
+                        Books We Love
+                      </span>
+                </Typography>
+            </section>
+            <section className="card_section3">
+                <Grid  container spacing={2}>
+                        {todo && todo.slice(0, 6).map((book: any) => (
+                        <Grid item  md={2} key={book.id} >
+                            <Bookcard book={book} />
+                        </Grid>
+                            ))
+                        }
+                        
+                </Grid>
+            </section>.
+            <section className="card_section4">
+                <Box width="100%" height="300px" bg="#0376b8" color="white" display="flex" justifyContent="center" alignItems="center">
+                       <Link href="/books">
+                        <img src="001.png" alt="" />
+                        </Link>
+                </Box>     
             </section>
         </div>
     )

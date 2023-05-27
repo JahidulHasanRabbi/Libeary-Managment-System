@@ -47,9 +47,7 @@ color: white;
 }
 
 .main_body {
-  background: #cfc5a2;
-  border-bottom: 1px solid #e4e0cc;
-  border-top: 2px solid #eae7d6;
+  background: #dbcd9e;
   box-sizing: border-box;
   padding-left: 10px;
   padding-right: 10px;
@@ -57,17 +55,18 @@ color: white;
   margin-right: 10%;
   margin-top: 20px;
   border-radius: 10px;
-  
+  padding: 10px;
 }
 
 .card-container {
-  background: #cfc5a2;
+  background: #dbcd9e;
   width: 125px;
-  height: 250px;
-  margin-top: 20px;
-  padding: 5px;
- 
+  height: 260px;
+  padding: none;
+  box-sizing: border-box;
+  border: none;
 }
+
 
 .card-action {
   display: flex;
@@ -78,4 +77,23 @@ color: white;
   width: 100%;
   box-sizing: border-box;
   border-radius: 10px;
+}
+
+.card-action > Button {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.card_section2 {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+  text-decoration: underline;
+  background-color: aliceblue;
+}
+
+.card_section3 {
+  margin-top: 10px;
+  box-sizing: border-box;
 }
