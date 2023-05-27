@@ -6,7 +6,6 @@ import { Grid } from "@mui/material";
 
 
 const Body = () => {
-
     
     const [todo, setTodo] = useState(null);
 
@@ -19,16 +18,15 @@ const Body = () => {
 
 
     return (
-        <div>
+        <div >
             <Grid container spacing={2}>
-                <Grid item xs={6} md={8}>
-                    <item>
                     {todo && todo.map((book: any) => (
-                <Bookcard book={book} />
-            ))
-            }
-                    </item>
+                    <Grid item xs={8}>
+                        <Bookcard book={book} />
                     </Grid>
+                        ))
+                    }
+                    
             </Grid>
         </div>
     )
