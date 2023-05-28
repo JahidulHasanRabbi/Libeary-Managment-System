@@ -26,7 +26,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
          return self.username
-    
+
+    def get_role(self):
+        if self.is_superuser:
+            return 'superuser'
+        elif self.is_staff:
+            return 'staff'
+        else:
+            return 'user'
+
 class Authour(models.Model):
     """
     Authour Model

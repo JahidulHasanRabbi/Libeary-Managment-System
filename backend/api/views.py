@@ -18,6 +18,7 @@ openai.api_key = "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"
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
 
+
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -72,8 +73,13 @@ class UserLoginView(views.APIView):
             print(username, password)
             user = authenticate(username=username, password= password)
             if user is not None:
+                role = user.get_role()
+                if role == True:
+                    role = "staff"
+                else:
+                    role = "user"
                 token = get_tokens_for_user(user)
-                return Response({'Token' : token, 'msg': 'Login Sucess'}, status=status.HTTP_200_OK)
+                return Response({'Token' : token, 'role': role, 'msg': 'Login Sucess'}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': {
                     'none_field_error': ['email or password is not valid']}},
