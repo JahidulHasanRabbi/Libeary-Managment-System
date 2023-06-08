@@ -13,6 +13,11 @@ body {
   text-align: center;
 }
 
+.title > a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+
+}
 .MuiToolbar-root	{
   padding: 1px;
   background-color: rgb(212, 193, 125);
@@ -96,4 +101,26 @@ color: white;
 .card_section3 {
   margin-top: 10px;
   box-sizing: border-box;
+}
+
+.card_section4 {
+  width: 100%;
+}
+.card_section4 > img {
+  width: 150%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.email_box, .pass_box {
+  padding: 10px;
+  margin: 10px;
+}
+
+.footer_d {
+  padding: 5px;
+  margin: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }

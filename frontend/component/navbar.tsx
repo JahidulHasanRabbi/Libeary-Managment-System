@@ -1,7 +1,8 @@
 import { AppBar, Container, Grid, Toolbar, Typography } from "@mui/material";
 import SearchBar from "./search";
 import BasicMenu from "./menu";
-
+import Home from "@/pages";
+import Link from 'next/link';
 
 
 const Navbar = () => {
@@ -13,9 +14,11 @@ const Navbar = () => {
       <Grid item xs={4}>
         <Typography variant="h6">
           <div className="title">
-            <span>
-              Hasan Library
-            </span>
+            <Link href="/">
+              <span>
+                Hasan Library
+              </span>
+            </Link>
           </div>
         </Typography>
       </Grid>

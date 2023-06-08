@@ -1,13 +1,13 @@
+import UserDashboard from "@/component/User";
 import Navbar from "@/component/navbar";
-import StaffDashboard from "@/component/staff";
-
 
 const Dashboard = () => {
     return (
+
         <div>
             <Navbar />
-            <StaffDashboard />
+            <UserDashboard />
         </div>
     )
-}
+    }
 export default Dashboard;

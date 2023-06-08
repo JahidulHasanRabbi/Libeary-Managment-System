@@ -50,11 +50,11 @@ const Body = () => {
                 </Grid>
             </section>.
             <section className="card_section4">
-                <Box width="100%" height="300px" bg="#0376b8" color="white" display="flex" justifyContent="center" alignItems="center">
-                       <Link href="/books">
-                        <img src="001.png" alt="" />
-                        </Link>
-                </Box>     
+            <Box   >
+                <Link href="/books">
+                <img src="001.png" alt="" />
+                </Link>
+            </Box>
             </section>
         </div>
     )

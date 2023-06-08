@@ -56,11 +56,6 @@ export default function BasicMenu() {
                       </Link>
                   </Grid>
                   <Grid item>
-                  <Link className='login_icon' href="/login">
-                      <span>
-                          Sign Up
-                      </span>
-                  </Link>
               </Grid>
               </Grid>
             </div> )}
