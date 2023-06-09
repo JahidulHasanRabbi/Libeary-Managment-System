@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView, ListCreateAPIView, CreateAPIView
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import UserSerializer, LoginSerializer, ProfileSerializer,StaffSerializer
+from .serializers import UserSerializer, LoginSerializer, ProfileSerializer,StaffSerializer, BookSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import views, status, filters
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
@@ -11,6 +11,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import openai
 from .permission import IsStaff
 import gradio as gr
+from .models import Book
+
 
 openai.api_key = "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"
 
@@ -24,19 +26,44 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
+class FeaturedBookListAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        books = Book.objects.filter(fecture='yes')
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BookListAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+    
+    def get(self, request):
+        books = Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class AddBookAPIView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    
     def post(self, request):
+        data = request.data
+        print(data)
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteBookAPIView(ListCreateAPIView):
     def post(self, request, book_id):
         book = Book.objects.get(id=book_id)
-        book.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        complete = book.delete()
+        if complete:
+            return Response("Deleted", status=status.HTTP_200_OK)
+        return Response("Not Deleted", status=status.HTTP_400_BAD_REQUEST)
+        
         
 
 class UpdateBookAPIView(ListCreateAPIView):
@@ -45,8 +72,16 @@ class UpdateBookAPIView(ListCreateAPIView):
         serializer = BookSerializer(book, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response("updated", status=status.HTTP_200_OK)
         return Response(serializer.errors, status=400)
+
+
+class BookSearchAPIView(views.APIView):
+    serializer_class = BookSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', '')
+        return Book.objects.filter(title__icontains=query) | Book.objects.filter(author__icontains=query)
 
 
 class UserRegisterView(ListCreateAPIView):

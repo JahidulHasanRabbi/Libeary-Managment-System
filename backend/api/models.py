@@ -35,29 +35,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return 'user'
 
-class Authour(models.Model):
-    """
-    Authour Model
-    """
-    name = models.CharField(max_length=50)
 
-    def __str__(self):
-        return self.name
 
 class Book(models.Model):
     id = models.UUIDField(default=uuid.uuid4,
                         primary_key=True,
                         unique=True,
                         editable=False)
-    isbn = models.IntegerField()
+    isbn = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=250)
-    authour = models.ForeignKey(Authour, on_delete=models.CASCADE)
+    authour = models.CharField(max_length=50)
     publisher = models.CharField(max_length=100)
-    edition = models.CharField(max_length=50)
     page = models.CharField(max_length=50)
     cover = models.CharField(max_length=50)
     qty = models.IntegerField()
     revision = models.CharField(max_length=50)
+    fecture = models.CharField(max_length=50)
 
 
 #Book Reserve
