@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { Alert, Button, Container, TextField } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-
+import StudentDashboard from '@/pages/student/Dashboard';
+import Dashboard from '@/pages/staff/dashboard';
 
 
 const LoginForm = () => {
@@ -27,16 +28,17 @@ const LoginForm = () => {
             setCookie('User', res.data.Token.access,  {path: '/' })
             localStorage.setItem('Token', res.data.Token.access)
             setCookie('Role', res.data.role,  {path: '/' })
-                localStorage.setItem('Token', res.data.rolr)
-            if(res.ok) {
-                const { role } = res.role;
+            localStorage.setItem('Role', res.data.Role)
+            console.log(res.data.role);
+            const role = res.data.role;
+            
                 if(role == 'user') {
-                    router.push('/UserDashboard');
-                } else {
-                    router.push('/StaffDashboard');
+                    router.push('/student/Dashboard');
+                } else if (role == 'staff'){
+                    router.push('/staff/dashboard');
                 }
                 
-            }}).catch((err) => {
+            }).catch((err) => {
                 setError("Invalid Credentials");
                 console.log(err);
                 console.log("error");

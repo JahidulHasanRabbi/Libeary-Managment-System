@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import User, Book, BookReserve, Fine
+from .models import User, Book, BookReserve, Fine, BorrowedBook, Fine
 
 
 
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['username', 'password', 'name', 'email']
 
     def create(self, validated_data):
         return User.objects.create_staff(**validated_data)
@@ -38,10 +38,22 @@ class BookReserveSerializer(serializers.ModelSerializer):
         model = BookReserve
         fields = '__all__'
 
+class BorrowedBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowedBook
+        fields = '__all__'
+
+class FineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Fine
+        fields = ['id', 'borrowed_book', 'user', 'date', 'fine_amount', 'status']
+        read_only_fields = ['id', 'date']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'firstname', 'lastname', 'email', 'date_joined']
+        fields = ['id', 'name', 'email', 'date_joined', 'is_staff']
 
 class FineSerializer(serializers.ModelSerializer):
     class Meta:

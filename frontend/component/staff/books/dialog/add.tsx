@@ -152,7 +152,7 @@ const AddBookDialog = ({ isOpen, onClose, onSave }) => {
       const author = bookData.authors[0].key ? bookData.authors[0].key : "Author Not Found";
       const publisher = bookData.publishers ? bookData.publishers[0] : "Unknown";
       const edition = bookData.revision || "Unknown";
-      const page = bookData.number_of_pages || "Unknown";
+      const page = bookData.number_of_pages? bookData.number_of_pages : "Unknown";
       const cover = bookData.covers
         ? `https://covers.openlibrary.org/b/id/${bookData.covers}-L.jpg`
         : "Unknown";
@@ -165,7 +165,7 @@ const AddBookDialog = ({ isOpen, onClose, onSave }) => {
         author:author,
         publisher: bookData.publishers[0],
         edition: bookData.revision,
-        page: bookData.number_of_pages,
+        page: page,
         cover: `https://covers.openlibrary.org/b/id/${bookData.covers}-L.jpg`,
         revision: bookData.revision,
       });

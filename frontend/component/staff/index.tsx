@@ -9,8 +9,9 @@ import DashboardForm from '../User/form';
 import ChangePassword from '../password';
 import Books from './books';
 import Fine from './fine';
-import Student from './student';
+import Student from '../student';
 import Staff from './staff';
+import ReportDownload from './Report';
 
 const StaffDashboard = () => {
 
@@ -71,6 +72,14 @@ const StaffDashboard = () => {
                 <ListItemText primary="Change Password" />
               </ListItemButton>
               </ListItem>
+              <ListItem onClick={() => setCurrentPage('Report')}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <LockIcon />
+                </ListItemIcon>
+                <ListItemText primary="Report" />
+              </ListItemButton>
+              </ListItem>
             </List>
           </Box>
         </Grid>
@@ -82,6 +91,7 @@ const StaffDashboard = () => {
         {currentPage === 'Staff' && <Staff />}
         {currentPage === 'Fine' && <Fine />}
         {currentPage === 'ChangePassword' && <ChangePassword />}
+        {currentPage === 'Report' && <ReportDownload />}
           
         </Grid>
       </Grid>

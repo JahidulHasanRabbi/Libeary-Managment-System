@@ -1,13 +1,16 @@
 import UserDashboard from "@/component/User";
+import Footer from "@/component/footer";
 import Navbar from "@/component/navbar";
 
-const Dashboard = () => {
+
+const StudentDashboard = () => {
     return (
 
         <div>
             <Navbar />
             <UserDashboard />
+            <Footer />
         </div>
     )
     }
-export default Dashboard;
+export default StudentDashboard;

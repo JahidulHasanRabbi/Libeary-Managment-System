@@ -1,5 +1,7 @@
+import Footer from "@/component/footer";
 import Navbar from "@/component/navbar";
 import StaffDashboard from "@/component/staff";
+
 
 
 const Dashboard = () => {
@@ -7,6 +9,7 @@ const Dashboard = () => {
         <div>
             <Navbar />
             <StaffDashboard />
+            <Footer />
         </div>
     )
 }

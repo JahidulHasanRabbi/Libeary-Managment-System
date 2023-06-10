@@ -16,6 +16,7 @@ import {
   DialogActions,
   FormControl,
   InputLabel,
+  Input,
   FormHelperText,
 } from '@mui/material';
 import { styled } from '@mui/system';
@@ -29,27 +30,29 @@ const StyledFormControl = styled(FormControl)({
   margin: '5px',
 });
 
-const Staff = () => {
-  const [staffMembers, setStaffMembers] = useState([]);
+const Student = () => {
+  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState('');
-  const [staffName, setStaffName] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
-    fetchStaffMembers();
+    fetchStudents();
   }, []);
 
-  const fetchStaffMembers = () => {
+  const fetchStudents = () => {
     axios
-      .get('http://127.0.0.1:8000/api/user/staff/', 
-    )
+      .get('http://127.0.0.1:8000/api/user/', {
+        params: {
+          search: searchTerm,
+        },
+      })
       .then((response) => {
-        setStaffMembers(response.data);
-        console.log(response.data);
+        setStudents(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -58,62 +61,62 @@ const Staff = () => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchStaffMembers();
+      fetchStudents();
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  const handleAddStaff = () => {
+  const handleAddStudent = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
     setUserName('');
-    setStaffName('');
+    setStudentName('');
     setEmail('');
     setPassword('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const staffData = {
+  
+    const userData = {
       username: userName,
-      name: staffName,
+      name: studentName,
       email: email,
       password: password,
     };
-
+  
     axios
-      .post('http://127.0.0.1:8000/api/register/staff/', staffData)
+      .post('http://127.0.0.1:8000/api/register/', userData)
       .then((response) => {
-        setAlertMessage('Staff member added successfully');
+        setAlertMessage('Student added successfully');
         setOpen(false);
-        fetchStaffMembers();
+        fetchStudents();
         setUserName('');
-        setStaffName('');
+        setStudentName('');
         setEmail('');
         setPassword('');
       })
       .catch((error) => {
-        setAlertMessage(`Failed to add staff member: ${error.message}`);
+        setAlertMessage(`Failed to add student: ${error.message}`);
       });
   };
 
   return (
     <div>
-      <h2>Staff List</h2>
+      <h2>Student List</h2>
       <TextField
-        label="Search Staff"
+        label="Search Student"
         variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{ marginBottom: '1rem' }}
       />
-      <StyledButton variant="contained" onClick={handleAddStaff}>
-        Add Staff
+      <StyledButton variant="contained" onClick={handleAddStudent}>
+        Add Student
       </StyledButton>
       <TableContainer component={Paper}>
         <Table>
@@ -125,11 +128,11 @@ const Staff = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {staffMembers.map((staff) => (
-              <TableRow key={staff.id}>
-                <TableCell>{staff.name}</TableCell>
-                <TableCell>{staff.email}</TableCell>
-                <TableCell>{staff.date_joined}</TableCell>
+            {students.map((student) => (
+              <TableRow key={student.id}>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>{student.date_joined}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -137,10 +140,10 @@ const Staff = () => {
       </TableContainer>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Staff</DialogTitle>
+        <DialogTitle>Add Student</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
-            <StyledFormControl fullWidth>
+          <StyledFormControl fullWidth>
               <TextField
                 label="User Name"
                 required
@@ -151,9 +154,9 @@ const Staff = () => {
             </StyledFormControl>
             <StyledFormControl fullWidth>
               <TextField
-                label="Staff Name"
+                label="Student Name"
                 required
-                value={staffName}
+                value={studentName}
                 onChange={(e) => setStaffName(e.target.value)}
                 variant="outlined"
               />
@@ -180,7 +183,7 @@ const Staff = () => {
               />
             </StyledFormControl>
             <DialogActions>
-              <Button type="submit">Add Staff</Button>
+              <Button type="submit">Add Student</Button>
               <Button onClick={handleClose}>Cancel</Button>
             </DialogActions>
           </form>
@@ -196,4 +199,4 @@ const Staff = () => {
   );
 };
 
-export default Staff;
+export default Student;

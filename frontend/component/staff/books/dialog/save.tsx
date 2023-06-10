@@ -28,7 +28,7 @@ const BookInfoDialog = ({ isOpen, bookInfo, onClose }) => {
       const bookData = {
         isbn: bookInfo.isbn,
         title: bookInfo.title,
-        authour: authorInfo.name,
+        author: authorInfo.name,
         publisher: bookInfo.publisher,
         edition: bookInfo.edition,
         page: bookInfo.page,

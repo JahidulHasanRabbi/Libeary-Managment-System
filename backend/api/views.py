@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate
-from rest_framework.generics import ListAPIView, ListCreateAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import UserSerializer, LoginSerializer, ProfileSerializer,StaffSerializer, BookSerializer
+from .serializers import UserSerializer, LoginSerializer, ProfileSerializer,StaffSerializer, BookSerializer, FineSerializer, BorrowedBookSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import views, status, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
@@ -11,10 +12,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import openai
 from .permission import IsStaff
 import gradio as gr
-from .models import Book
+from .models import Book, Fine, User, BorrowedBook
 
 
-openai.api_key = "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"
 
 #Mannuly Token Generate
 def get_tokens_for_user(user):
@@ -76,13 +76,136 @@ class UpdateBookAPIView(ListCreateAPIView):
         return Response(serializer.errors, status=400)
 
 
-class BookSearchAPIView(views.APIView):
+class BookSearchView(ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['author', 'title']
+    search_fields = ['author', 'title']
+
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Book, BorrowedBook
+from .serializers import BorrowedBookSerializer
+
+class BorrowBooksAPIView(CreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BorrowedBookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        book_ids = request.data.get('book_ids', [])
+
+        # Limit the number of books requested to 5
+        book_ids = book_ids[:5]
+
+        books = Book.objects.filter(id__in=book_ids)
+        user = request.user
+
+        # Check if the user has already borrowed the requested books
+        already_borrowed_books = BorrowedBook.objects.filter(user=user, book__in=books, status='BORROWED')
+        if already_borrowed_books.exists():
+            already_borrowed_books_titles = [borrowed_book.book.title for borrowed_book in already_borrowed_books]
+            return Response({"detail": f"You have already borrowed the following books: {', '.join(already_borrowed_books_titles)}"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif not books.exists():
+            borrowed_books = []
+            not_registered_books = []
+            for book in books:
+
+                # Check if the user has reached the maximum limit of 5 books
+                if BorrowedBook.objects.filter(user=user, status='BORROWED').count() >= 5:
+                    not_registered_books.append(book)
+                    continue  # Skip if the user has reached the maximum limit
+
+                # Create a new borrowing record
+                borrowed_book = BorrowedBook.objects.create(user=user, book=book, status='BORROWED')
+
+                # Decrease the book quantity
+                book.qty -= 1
+                book.save()
+
+                borrowed_books.append(borrowed_book)
+
+            serializer = self.get_serializer(borrowed_books, many=True)
+
+            if not_registered_books:
+                message = "You have reached the maximum limit of borrowed books. The following books were not registered: " + ", ".join(
+                    [book.title for book in not_registered_books])
+                return Response({"detail": message}, status=status.HTTP_400_BAD_REQUEST)
+            elif borrowed_books:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"detail": "No books were registered for borrowing."}, status=status.HTTP_400_BAD_REQUEST)
+
+def apply_fine(borrowed_book):
+    if borrowed_book.return_date > borrowed_book.return_date:
+        days_overdue = (borrowed_book.return_date - borrowed_book.return_date).days
+        fine_amount = days_overdue * 100  # Assuming the fine amount is 100 Tk per day overdue
+
+        fine = Fine.objects.create(borrowed_book=borrowed_book, user=borrowed_book.user, fine_amount=fine_amount)
+        fine.status = 'OVERDUE'  # Set the initial status of the fine as 'OVERDUE'
+        fine.save()
+
+
+class ReturnBookAPIView(UpdateAPIView):
+    queryset = BorrowedBook.objects.filter(status='BORROWED')
+    serializer_class = BorrowedBookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        borrowed_book_id = self.kwargs.get('pk')
+
+        try:
+            borrowed_book = BorrowedBook.objects.get(id=borrowed_book_id, status='BORROWED')
+        except BorrowedBook.DoesNotExist:
+            return Response({"detail": "No borrowed book found with the provided ID."}, status=status.HTTP_404_NOT_FOUND)
+
+        book = borrowed_book.book
+        borrowed_book.return_date = timezone.now()
+        book.qty += 1  # Increase the book quantity
+        book.save()
+
+        borrowed_book.status = 'RETURNED'
+        borrowed_book.save()
+        apply_fine(borrowed_book)
+
+        serializer = self.get_serializer(borrowed_book)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class FineDetailView(RetrieveUpdateAPIView):
+    queryset = Fine.objects.all()
+    serializer_class = FineSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        fine = self.get_object()
+
+        if fine.paid:
+            return Response({"detail": "The fine has already been paid."}, status=status.HTTP_400_BAD_REQUEST)
+
+        fine.pay_fine()
+
+        return Response({"detail": "Fine has been successfully paid."}, status=status.HTTP_200_OK)
+
+class UserBorrowedBooksAPIView(ListAPIView):
+    serializer_class = BorrowedBookSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        query = self.request.query_params.get('query', '')
-        return Book.objects.filter(title__icontains=query) | Book.objects.filter(author__icontains=query)
+        user = self.request.user
+        return BorrowedBook.objects.filter(user=user, status='BORROWED')
 
+class BookBorrowersAPIView(ListAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        book_id = self.kwargs['book_id']
+        return User.objects.filter(borrowedbook__book_id=book_id, borrowedbook__status='BORROWED')
 
 class UserRegisterView(ListCreateAPIView):
     permission_classes = (AllowAny, )
@@ -109,7 +232,7 @@ class UserLoginView(views.APIView):
             user = authenticate(username=username, password= password)
             if user is not None:
                 role = user.get_role()
-                if role == True:
+                if role == 'staff':
                     role = "staff"
                 else:
                     role = "user"
@@ -165,33 +288,3 @@ class UserProfileView(views.APIView):
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-
-class home(views.APIView):
-    permission_classes = (AllowAny,)
-    def post(self, request):
-        return Response("OK", status=status.HTTP_200_OK)
-    
-
-
-
-class chatbot(views.APIView):
-    permission_classes = (AllowAny,)
-   
-
-    def post(self, request):
-        
-        user_input = request.data.get("input")
-        print(user_input)
-        prompt =f"You are an AI specialized in book and paper. Do not answer anything other than book and paper-related queries. Do not explain thing to long: {user_input}"
-        chatbot_response = None
-        
-
-        response = openai.Completion.create(
-            engine = 'text-davinci-003',
-            prompt = prompt,
-            max_tokens=256,
-            temperature = 0.3
-        )
-        print(response)
-        return Response(response) 

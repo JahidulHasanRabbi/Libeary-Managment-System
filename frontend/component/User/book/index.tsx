@@ -1,7 +1,7 @@
 const BorrowBookForm = () => { 
     return (
         <div>
-            <h1> Borrow Book Form </h1>
+            <h1> Borrowd Book </h1>
         </div>
     )
 }

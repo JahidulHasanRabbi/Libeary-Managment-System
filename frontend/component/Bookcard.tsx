@@ -11,11 +11,11 @@ import Link from 'next/link';
 const Bookcard = ({ book }: any) =>{
   return (
     <Card className='card-container'>
-      <Link href={`/books/${book.isbn}`}>
+      <Link href={`/book/${book.isbn}`}>
       <CardMedia
         sx={{ width: 125, height: 200 }}
         component="img"
-        image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+        image={book.cover}
       />
       </Link>
 
