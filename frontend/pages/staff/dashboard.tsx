@@ -7,7 +7,7 @@ import StaffDashboard from "@/component/staff";
 const Dashboard = () => {
     return (
         <div>
-            <Navbar />
+            <Navbar  title="Dashboard"/>
             <StaffDashboard />
             <Footer />
         </div>

@@ -157,7 +157,7 @@ const Student = () => {
                 label="Student Name"
                 required
                 value={studentName}
-                onChange={(e) => setStaffName(e.target.value)}
+                onChange={(e) => setStudentName(e.target.value)}
                 variant="outlined"
               />
             </StyledFormControl>

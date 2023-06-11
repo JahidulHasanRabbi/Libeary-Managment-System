@@ -53,7 +53,7 @@ const Body = () => {
       </section>
       <section className="card_section4">
         <Box>
-          <Link href="/books">
+          <Link href="/chatbot">
             <img src="001.png" alt="" />
           </Link>
         </Box>

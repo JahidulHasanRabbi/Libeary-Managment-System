@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Home = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar  title="Home"/>
       <Body />
       <Footer />
     </div>

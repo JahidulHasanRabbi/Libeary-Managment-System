@@ -3,10 +3,17 @@ import SearchBar from "./search";
 import BasicMenu from "./menu";
 import Home from "@/pages";
 import Link from 'next/link';
+import Head from 'next/head'
+import { Helmet } from 'react-helmet'
 
 
-const Navbar = () => {
+
+const Navbar = ({ title}) => {
   return (
+    <>
+    <Helmet>
+      <title>{title}</title>
+    </Helmet>
     <div className="navbar">
       <AppBar position="static">
         <Toolbar>
@@ -37,6 +44,7 @@ const Navbar = () => {
     </Toolbar>
       </AppBar>
     </div>
+    </>
   );
 };
 

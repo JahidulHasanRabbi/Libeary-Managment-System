@@ -59,7 +59,7 @@ const BookDetailsPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar  title="Book Details"/>
       <Box style={containerStyles}>
         <Container maxWidth="md">
           <Box style={bookCardStyles}>

@@ -9,7 +9,7 @@ import Navbar from '@/component/navbar';
 const Login = () => {
     return (
     <div>
-        <Navbar />
+        <Navbar  title="Login"/>
         <LoginForm />
     </div>
     )

@@ -288,3 +288,69 @@ class UserProfileView(views.APIView):
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class UserUpdateView(views.APIView):
+    permission_classes = (IsAuthenticated,) 
+    def put(self, request):
+        user = request.user
+        serializer = ProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class home(views.APIView):
+    permission_classes = (AllowAny,)
+    def post(self, request):
+        return Response("OK", status=status.HTTP_200_OK)
+
+class SearchUserAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        name = request.data.get('name')
+        users = User.objects.filter(name__icontains=name, is_staff=False)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+class UserAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        users = User.objects.filter(is_staff=False)  # Filter out users who are staff
+        serializer = ProfileSerializer(users, many=True)
+        return Response(serializer.data)
+
+class StaffAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        users = User.objects.filter(is_staff=True)  # Filter out users who are student
+        serializer = ProfileSerializer(users, many=True)
+        return Response(serializer.data)
+
+class FineAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        fines = Fine.objects.all()
+        serializer = FineSerializer(fines, many=True)
+        return Response(serializer.data)
+
+class FineSearchAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        name = request.data.get('name')
+        fines = Fine.objects.filter(user__name__icontains=name)
+        serializer = FineSerializer(fines, many=True)
+        return Response(serializer.data)
+
+class FinePayAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, fine_id):
+        fine = Fine.objects.get(id=fine_id)
+        fine.paid = True
+        fine.save()
+        return Response("Paid", status=status.HTTP_200_OK)
