@@ -154,10 +154,10 @@ const AddBookDialog = ({ isOpen, onClose, onSave }) => {
       const edition = bookData.revision || "Unknown";
       const page = bookData.number_of_pages? bookData.number_of_pages : "Unknown";
       const cover = bookData.covers
-        ? `https://covers.openlibrary.org/b/id/${bookData.covers}-L.jpg`
+        ? `https://covers.openlibrary.org/b/id/${bookData.covers[0]}-L.jpg`
         : "Unknown";
       const revision = bookData.revision || "Unknown";
-      console.log("auhtor:", author)
+      console.log("auhtor:", cover)
 
       setBookInfo({
         isbn: bookData.isbn_13[0],
@@ -166,7 +166,7 @@ const AddBookDialog = ({ isOpen, onClose, onSave }) => {
         publisher: bookData.publishers[0],
         edition: bookData.revision,
         page: page,
-        cover: `https://covers.openlibrary.org/b/id/${bookData.covers}-L.jpg`,
+        cover: cover,
         revision: bookData.revision,
       });
       console.log("BookInfo:", bookInfo);

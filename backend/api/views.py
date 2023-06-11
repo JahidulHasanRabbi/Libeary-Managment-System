@@ -330,27 +330,28 @@ class StaffAPIView(views.APIView):
         serializer = ProfileSerializer(users, many=True)
         return Response(serializer.data)
 
-class FineAPIView(views.APIView):
-    permission_classes = (AllowAny,)
-    def get(self, request):
-        fines = Fine.objects.all()
-        serializer = FineSerializer(fines, many=True)
-        return Response(serializer.data)
 
-class FineSearchAPIView(views.APIView):
+
+openai.api_key_path = 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
+
+class ChatbotView(views.APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
-        name = request.data.get('name')
-        fines = Fine.objects.filter(user__name__icontains=name)
-        serializer = FineSerializer(fines, many=True)
-        return Response(serializer.data)
+        
+        user_input = request.data.get("input")
+        print(user_input)
+        prompt =f"You are an AI specialized in book and paper. Do not answer anything other than book and paper-related queries. Do not explain thing to long: {user_input}"
 
-class FinePayAPIView(views.APIView):
-    permission_classes = (AllowAny,)
 
-    def post(self, request, fine_id):
-        fine = Fine.objects.get(id=fine_id)
-        fine.paid = True
-        fine.save()
-        return Response("Paid", status=status.HTTP_200_OK)
+        response = openai.Completion.create(
+            engine = 'text-davinci-003',
+            prompt = prompt,
+            max_tokens=256,
+            temperature = 0.3
+        )
+        
+
+        chatbot_response = response.choices[0].text.strip()
+
+        return Response({"response": chatbot_response})

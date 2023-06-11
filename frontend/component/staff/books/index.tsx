@@ -1,22 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Container,
   TextField,
   Typography,
   Button,
-  Table,
   TableContainer,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   IconButton,
   DialogContentText,
+  styled,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,6 +27,13 @@ const Books = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddBookDialogOpen, setIsAddBookDialogOpen] = useState(false);
 
+
+  const StyledButton = styled(Button)({
+    marginTop: '7px',
+    float: 'right',
+  });
+
+  
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -46,7 +49,9 @@ const Books = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/book/search/?query=${searchQuery}`);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/book/search/?query=${searchQuery}`
+      );
       setBooks(response.data);
     } catch (error) {
       console.error("Error searching books:", error);
@@ -55,7 +60,10 @@ const Books = () => {
 
   const handleQuantityChange = async (bookId, quantity) => {
     try {
-      await axios.patch(`http://127.0.0.1:8000/api/book/update/${bookId}/`, { qty: quantity });
+      await axios.patch(
+        `http://127.0.0.1:8000/api/book/update/${bookId}/`,
+        { qty: quantity }
+      );
       const updatedBooks = books.map((book) => {
         if (book.id === bookId) {
           return { ...book, qty: quantity };
@@ -80,7 +88,10 @@ const Books = () => {
 
   const handleSaveEdit = async () => {
     try {
-      await axios.put(`http://127.0.0.1:8000/api/book/update/${selectedBook.id}/`, selectedBook);
+      await axios.put(
+        `http://127.0.0.1:8000/api/book/update/${selectedBook.id}/`,
+        selectedBook
+      );
       const updatedBooks = books.map((book) => {
         if (book.id === selectedBook.id) {
           return selectedBook;
@@ -107,7 +118,9 @@ const Books = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/book/delete/${selectedBook.id}/`);
+      await axios.delete(
+        `http://127.0.0.1:8000/api/book/delete/${selectedBook.id}/`
+      );
       const updatedBooks = books.filter((book) => book.id !== selectedBook.id);
       setBooks(updatedBooks);
       setSelectedBook(null);
@@ -147,14 +160,17 @@ const Books = () => {
         variant="outlined"
         margin="normal"
       />
-      <Button variant="contained" onClick={handleSearch}>
-        Search
-      </Button>
-      <Button variant="contained" onClick={handleAddBook}>
+  
+      <StyledButton variant="contained" onClick={handleAddBook}>
         Add Book
-      </Button>
+      </StyledButton>
       <TableContainer>
-        <BookTable books={books} onEdit={handleEdit} onDelete={handleDelete} onQuantityChange={handleQuantityChange} />
+        <BookTable
+          books={books}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onQuantityChange={handleQuantityChange}
+        />
       </TableContainer>
 
       <Dialog open={isDeleteDialogOpen} onClose={handleCancelDelete}>
